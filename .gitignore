@@ -1,3 +1,9 @@
 .mypy_cache
 .vscode/.ropeproject
 __pycache__
+
+.vscode/*
+.vscode/
+.vscode/settings.json
+.vscode/launch.json
+.vscode/tasks.json
