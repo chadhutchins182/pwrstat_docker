@@ -73,6 +73,21 @@ def _get_status_dict(status: str) -> Dict[str, str]:
             status_list.append(lines)
     return {k[0]: k[1] for k in status_list}
 
+def run_test() -> Optional[Dict[str, str]]:
+    """Return status from pwrstat program."""
+    #The UPS test is initiated, checking the result by command "pwrstat -status".
+    _LOGGER.info("Getting status from pwrstatd...")
+    status: str = Popen(
+        ["pwrstat", "-status"], stdout=PIPE, stderr=DEVNULL
+    ).communicate()[0].decode("utf-8")
+    status_dict = _get_status_dict(status)
+    if len(status_dict) > 1:
+        return status_dict
+    _LOGGER.warning("Pwrstatd did not return any data.")
+    _LOGGER.warning("Check USB connection and UPS.")
+    _LOGGER.warning("If USB device frequently changes, consider creating a udev rule.")
+    return None
+
 
 def _start_pwrstatd() -> Popen:
     """Start pwrstatd daemon to allow communication with UPS."""
